@@ -2,7 +2,7 @@ package main
 
 import "testing"
 
-func Test_helloWorld(t *testing.T) {
+func TestHello(t *testing.T) {
 	assertCorrectMessage := func(t *testing.T, got string, want string) {
 		t.Helper()
 		if got != want {
