@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func main() {
+func StartServer() {
 	http.ListenAndServe(":5000", http.HandlerFunc(MyGreeterHandler))
 }
 

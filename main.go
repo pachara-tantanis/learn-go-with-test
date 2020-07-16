@@ -1,9 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"./mock"
+	"fmt"
+	"os"
+)
 
 func main() {
 	fmt.Println(Hello("", ""))
+	mock.Countdown(os.Stdout, &mock.DefaultSleeper{})
 }
 
 const french = "French"
