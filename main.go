@@ -4,11 +4,13 @@ import (
 	"./mock"
 	"fmt"
 	"os"
+	"time"
 )
 
 func main() {
 	fmt.Println(Hello("", ""))
-	mock.Countdown(os.Stdout, &mock.DefaultSleeper{})
+	sleeper := mock.NewConfigurableSleeper(2 * time.Second, time.Sleep)
+	mock.Countdown(os.Stdout, sleeper)
 }
 
 const french = "French"
