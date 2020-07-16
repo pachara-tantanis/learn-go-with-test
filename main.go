@@ -9,7 +9,7 @@ import (
 
 func main() {
 	fmt.Println(Hello("", ""))
-	sleeper := mock.NewConfigurableSleeper(2 * time.Second, time.Sleep)
+	sleeper := mock.NewConfigurableSleeper(1 * time.Second, time.Sleep)
 	mock.Countdown(os.Stdout, sleeper)
 }
 
