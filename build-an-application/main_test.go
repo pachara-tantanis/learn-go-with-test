@@ -68,7 +68,7 @@ func TestStoreWins(t *testing.T) {
 
 	t.Run("it returns accepted on POST", func(t *testing.T) {
 		player := "Pepper"
-		request, _ := newPostWinRequest(player)
+		request := newPostWinRequest(player)
 		response := httptest.NewRecorder()
 
 		server.ServeHTTP(response, request)
@@ -85,8 +85,24 @@ func TestStoreWins(t *testing.T) {
 	})
 }
 
-func newPostWinRequest(name string) (*http.Request, error) {
-	return http.NewRequest(http.MethodPost, fmt.Sprintf("/players/%s", name), nil)
+func TestRecordingWinsAndRetrievingThem(t *testing.T) {
+	server := PlayerServer{NewInMemoryPlayerStore()}
+	player := "Pepper"
+
+	server.ServeHTTP(httptest.NewRecorder(), newPostWinRequest(player))
+	server.ServeHTTP(httptest.NewRecorder(), newPostWinRequest(player))
+	server.ServeHTTP(httptest.NewRecorder(), newPostWinRequest(player))
+
+	response := httptest.NewRecorder()
+	server.ServeHTTP(response, newGetScoreRequest(player))
+	assertStatus(t, response.Code, http.StatusOK)
+
+	assertResponseBody(t, response.Body.String(), "3")
+}
+
+func newPostWinRequest(name string) *http.Request {
+	req, _ := http.NewRequest(http.MethodPost, fmt.Sprintf("/players/%s", name), nil)
+	return req
 }
 
 func newGetScoreRequest(name string) *http.Request {
