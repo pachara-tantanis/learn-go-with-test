@@ -18,6 +18,17 @@ func (l League) Find(name string) *Player {
 
 type FileSystemPlayerStore struct {
 	database io.ReadWriteSeeker
+	league League
+}
+
+
+func NewFileSystemPlayerStore(database io.ReadWriteSeeker) *FileSystemPlayerStore {
+	database.Seek(0, 0)
+	league, _ := NewLeague(database)
+	return &FileSystemPlayerStore{
+		database:database,
+		league:league,
+	}
 }
 
 func (f *FileSystemPlayerStore) GetLeague() League {
