@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-const dbFileName = "game.db.json"
+const dbFileName = "../game.db.json"
 
 func main() {
 	db, err := os.OpenFile(dbFileName, os.O_RDWR|os.O_CREATE, 0666)
