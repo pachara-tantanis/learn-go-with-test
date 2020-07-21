@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"io"
+	"os"
 )
 
 func (l League) Find(name string) *Player {
@@ -19,7 +20,7 @@ type FileSystemPlayerStore struct {
 	league   League
 }
 
-func NewFileSystemPlayerStore(database io.ReadWriteSeeker) *FileSystemPlayerStore {
+func NewFileSystemPlayerStore(database *os.File) *FileSystemPlayerStore {
 	database.Seek(0, 0)
 	league, _ := NewLeague(database)
 	return &FileSystemPlayerStore{
