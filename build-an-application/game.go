@@ -5,9 +5,21 @@ import (
 )
 
 // game.go
+type GameController interface {
+	Start(numberOfPlayers int)
+	Finish(winner string)
+}
+
 type Game struct {
 	alerter BlindAlerter
 	store   PlayerStore
+}
+
+func NewGame(alerter BlindAlerter, store PlayerStore) *Game {
+	return &Game{
+		alerter: alerter,
+		store:   store,
+	}
 }
 
 func (p *Game) Start(numberOfPlayers int) {
