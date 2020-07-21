@@ -1,15 +1,16 @@
-package poker
+package poker_test
 
 import (
+	"../../build-an-application"
 	"io/ioutil"
 	"testing"
 )
 
 func TestTape_Write(t *testing.T) {
-	file, clean := createTempFile(t, "12345")
+	file, clean := poker.CreateTempFile(t, "12345")
 	defer clean()
 
-	tape := &tape{file}
+	tape := poker.NewTape(file)
 
 	tape.Write([]byte("abc"))
 
