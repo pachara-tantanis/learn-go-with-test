@@ -5,6 +5,8 @@
 **/*
 !**/*.go
 !**/
+!test_watch.sh
+!*.json
 
 ### Go ###
 # Binaries for programs and plugins
