@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/pachara-tantanis/learn-go-with-test/build-an-application/poker"
+	"github.com/pachara-tantanis/learn-go-with-test/build-an-application"
 	"log"
 	"net/http"
 	"os"
