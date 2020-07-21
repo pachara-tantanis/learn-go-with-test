@@ -7,6 +7,8 @@ import (
 	"testing"
 )
 
+const jsonContentType = "application/json"
+
 func TestGETPlayers(t *testing.T) {
 	store := poker.StubPlayerStore{
 		Scores: map[string]int{
@@ -72,7 +74,7 @@ func TestLeague(t *testing.T) {
 			{"Tiest", 14},
 		}
 
-		store := poker.StubPlayerStore{nil, nil, wantedLeague}
+		store := poker.StubPlayerStore{League: wantedLeague}
 		server := poker.NewPlayerServer(&store)
 
 		request := poker.NewLeagueRequest()
@@ -87,4 +89,20 @@ func TestLeague(t *testing.T) {
 	})
 }
 
-const jsonContentType = "application/json"
+func TestGame(t *testing.T) {
+	t.Run("GET /game returns 200", func(t *testing.T) {
+		server := poker.NewPlayerServer(&poker.StubPlayerStore{})
+
+		request := newGameRequest()
+		response := httptest.NewRecorder()
+
+		server.ServeHTTP(response, request)
+
+		poker.AssertStatus(t, response.Code, http.StatusOK)
+	})
+}
+
+func newGameRequest() *http.Request {
+	request, _ := http.NewRequest(http.MethodGet, "/game", nil)
+	return request
+}
