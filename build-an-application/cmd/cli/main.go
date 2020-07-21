@@ -1,8 +1,8 @@
 package main
 
 import (
+	"../../../build-an-application"
 	"fmt"
-	"github.com/pachara-tantanis/learn-go-with-test/build-an-application"
 	"log"
 	"os"
 )
@@ -25,6 +25,6 @@ func main() {
 		log.Fatalf("problem creating file system player store, %v ", err)
 	}
 
-	game := poker.CLI{store, os.Stdin}
+	game := poker.NewCLI(store, os.Stdin)
 	game.PlayPoker()
 }
