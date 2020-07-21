@@ -28,7 +28,7 @@ func (g *GameSpy) Finish(winner string) {
 func TestCLI(t *testing.T) {
 	t.Run("it prompts the user to enter the number of players and starts the game", func(t *testing.T) {
 		stdout := &bytes.Buffer{}
-		in := strings.NewReader("7\n")
+		in := strings.NewReader("7\nme wins")
 		game := &GameSpy{}
 
 		cli := poker.NewCLI(in, stdout, game)
@@ -51,6 +51,17 @@ func TestCLI(t *testing.T) {
 
 		assertGameNotStarted(t, game)
 		assertMessagesSentToUser(t, stdout, poker.PlayerPrompt, poker.BadPlayerInputErrMsg)
+	})
+
+	t.Run("it prints an error when input wrong winner pattern", func(t *testing.T) {
+		stdout := &bytes.Buffer{}
+		in := strings.NewReader("7\nsomething\n")
+		game := &GameSpy{}
+
+		cli := poker.NewCLI(in, stdout, game)
+		cli.PlayPoker()
+
+		assertMessagesSentToUser(t, stdout, poker.PlayerPrompt, poker.BadWinnerInputErrMsg)
 	})
 
 }

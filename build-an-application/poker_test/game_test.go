@@ -69,7 +69,7 @@ func TestGame_Start(t *testing.T) {
 
 	t.Run("it prompts the user to enter the number of players", func(t *testing.T) {
 		stdout := &bytes.Buffer{}
-		in := strings.NewReader("7\n")
+		in := strings.NewReader("7\nme wins")
 		blindAlerter := &SpyBlindAlerter{}
 		game := poker.NewGame(blindAlerter, dummyPlayerStore)
 

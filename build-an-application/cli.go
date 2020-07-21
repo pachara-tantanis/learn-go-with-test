@@ -20,6 +20,7 @@ func NewCLI(in io.Reader, out io.Writer, game GameController) *CLI {
 
 const PlayerPrompt = "Please enter the number of players: "
 const BadPlayerInputErrMsg = "Bad value received for number of players, please try again with a number"
+const BadWinnerInputErrMsg = "Bad received for winner input"
 
 func (cli *CLI) PlayPoker() {
 	fmt.Fprint(cli.out, PlayerPrompt)
@@ -34,7 +35,12 @@ func (cli *CLI) PlayPoker() {
 	cli.Game.Start(numberOfPlayers)
 
 	userInput := cli.readLine()
-	cli.Game.Finish(extractWinner(userInput))
+	winner, err := extractWinner(userInput)
+	if err != nil {
+		fmt.Fprintf(cli.out, BadWinnerInputErrMsg)
+	}
+
+	cli.Game.Finish(winner)
 }
 
 func (cli *CLI) readLine() string {
@@ -42,6 +48,10 @@ func (cli *CLI) readLine() string {
 	return cli.in.Text()
 }
 
-func extractWinner(userInput string) string {
-	return strings.Replace(userInput, " wins", "", 1)
+func extractWinner(userInput string) (string, error) {
+	winner := strings.TrimSuffix(userInput, " wins")
+	if winner == userInput {
+		return "", fmt.Errorf("wrong winning command got %v", userInput)
+	}
+	return winner, nil
 }
