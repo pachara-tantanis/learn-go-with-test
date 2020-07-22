@@ -3,6 +3,7 @@ package poker_test
 import (
 	"../../build-an-application"
 	"bytes"
+	"io"
 	"strings"
 	"testing"
 )
@@ -16,7 +17,7 @@ type GameSpy struct {
 	FinishedWith string
 }
 
-func (g *GameSpy) Start(numberOfPlayers int) {
+func (g *GameSpy) Start(numberOfPlayers int, out io.Writer) {
 	g.StartCalled = true
 	g.StartedWith = numberOfPlayers
 }

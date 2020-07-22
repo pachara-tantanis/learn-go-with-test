@@ -4,6 +4,8 @@ import (
 	"../../build-an-application"
 	"bytes"
 	"fmt"
+	"io"
+	"io/ioutil"
 	"strings"
 	"testing"
 	"time"
@@ -22,7 +24,7 @@ type SpyBlindAlerter struct {
 	alerts []scheduledAlert
 }
 
-func (s *SpyBlindAlerter) ScheduleAlertAt(duration time.Duration, amount int) {
+func (s *SpyBlindAlerter) ScheduleAlertAt(duration time.Duration, amount int, to io.Writer) {
 	s.alerts = append(s.alerts, scheduledAlert{duration, amount})
 }
 
@@ -33,7 +35,7 @@ func TestGame_Start(t *testing.T) {
 		blindAlerter := &SpyBlindAlerter{}
 		game := poker.NewGame(blindAlerter, playerStore)
 
-		game.Start(5)
+		game.Start(5, ioutil.Discard)
 		cases := []scheduledAlert{
 			{0 * time.Second, 100},
 			{10 * time.Minute, 200},
