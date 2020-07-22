@@ -29,7 +29,7 @@ func (g *GameSpy) Finish(winner string) {
 func TestCLI(t *testing.T) {
 	t.Run("it prompts the user to enter the number of players and starts the game", func(t *testing.T) {
 		stdout := &bytes.Buffer{}
-		in := strings.NewReader("7\nme wins")
+		in := userSends("7", "I wins")
 		game := &GameSpy{}
 
 		cli := poker.NewCLI(in, stdout, game)
@@ -37,9 +37,7 @@ func TestCLI(t *testing.T) {
 
 		assertMessagesSentToUser(t, stdout, poker.PlayerPrompt)
 
-		if game.StartedWith != 7 {
-			t.Errorf("wanted Start called with 7 but got %d", game.StartedWith)
-		}
+		assertGameStartedWith(t, game, 7)
 	})
 
 	t.Run("it prints an error when a non numeric value is entered and does not start the game", func(t *testing.T) {
@@ -56,7 +54,7 @@ func TestCLI(t *testing.T) {
 
 	t.Run("it prints an error when input wrong winner pattern", func(t *testing.T) {
 		stdout := &bytes.Buffer{}
-		in := strings.NewReader("7\nsomething\n")
+		in := userSends("7", "something")
 		game := &GameSpy{}
 
 		cli := poker.NewCLI(in, stdout, game)
@@ -65,6 +63,37 @@ func TestCLI(t *testing.T) {
 		assertMessagesSentToUser(t, stdout, poker.PlayerPrompt, poker.BadWinnerInputErrMsg)
 	})
 
+	t.Run("start game with 3 players and finish game with 'Chris' as winner", func(t *testing.T) {
+		game := &GameSpy{}
+
+		out := &bytes.Buffer{}
+		in := userSends("3", "Chris wins")
+
+		poker.NewCLI(in, out, game).PlayPoker()
+
+		assertMessagesSentToUser(t, out, poker.PlayerPrompt)
+		assertGameStartedWith(t, game, 3)
+		assertFinishCalledWith(t, game, "Chris")
+	})
+}
+
+func assertFinishCalledWith(t *testing.T, game *GameSpy, winner string) {
+	t.Helper()
+	if game.FinishedWith != winner {
+		t.Errorf("wanted %v but got %d", winner, game.StartedWith)
+	}
+}
+
+func assertGameStartedWith(t *testing.T, game *GameSpy, count int) {
+	t.Helper()
+	if game.StartedWith != count {
+		t.Errorf("wanted Start called with %v but got %d", count, game.StartedWith)
+	}
+}
+
+func userSends(messages ...string) *strings.Reader {
+	in := strings.Join(messages, "\n")
+	return strings.NewReader(in)
 }
 
 func assertGameNotStarted(t *testing.T, game *GameSpy) {

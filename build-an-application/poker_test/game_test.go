@@ -33,7 +33,7 @@ func TestGame_Start(t *testing.T) {
 	t.Run("it schedules printing of blind values", func(t *testing.T) {
 		playerStore := &poker.StubPlayerStore{}
 		blindAlerter := &SpyBlindAlerter{}
-		game := poker.NewGame(blindAlerter, playerStore)
+		game := poker.NewTexasHoldem(blindAlerter, playerStore)
 
 		game.Start(5, ioutil.Discard)
 		cases := []scheduledAlert{
@@ -73,7 +73,7 @@ func TestGame_Start(t *testing.T) {
 		stdout := &bytes.Buffer{}
 		in := strings.NewReader("7\nme wins")
 		blindAlerter := &SpyBlindAlerter{}
-		game := poker.NewGame(blindAlerter, dummyPlayerStore)
+		game := poker.NewTexasHoldem(blindAlerter, dummyPlayerStore)
 
 		cli := poker.NewCLI(in, stdout, game)
 		cli.PlayPoker()
@@ -109,7 +109,7 @@ func TestGame_Start(t *testing.T) {
 func TestGame_Finish(t *testing.T) {
 	playerStore := &poker.StubPlayerStore{}
 	blindAlerter := &SpyBlindAlerter{}
-	game := poker.NewGame(blindAlerter, playerStore)
+	game := poker.NewTexasHoldem(blindAlerter, playerStore)
 
 	const winner = "me"
 	game.Finish(winner)
