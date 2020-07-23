@@ -14,12 +14,14 @@ var dummyStdOut = &bytes.Buffer{}
 type GameSpy struct {
 	StartCalled  bool
 	StartedWith  int
+	BlindAlert   []byte
 	FinishedWith string
 }
 
 func (g *GameSpy) Start(numberOfPlayers int, out io.Writer) {
 	g.StartCalled = true
 	g.StartedWith = numberOfPlayers
+	out.Write(g.BlindAlert)
 }
 
 func (g *GameSpy) Finish(winner string) {
