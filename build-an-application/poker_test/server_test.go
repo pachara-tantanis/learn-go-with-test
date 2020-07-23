@@ -123,7 +123,6 @@ func TestGame(t *testing.T) {
 		writeWSMessage(t, ws, winner)
 
 		const waitDuration = 10 * time.Millisecond
-		time.Sleep(waitDuration)
 
 		assertGameStartedWith(t, game, 3)
 		assertFinishCalledWith(t, game, winner)

@@ -6,6 +6,7 @@ import (
 	"io"
 	"strings"
 	"testing"
+	"time"
 )
 
 var dummyPlayerStore = &poker.StubPlayerStore{}
@@ -79,16 +80,35 @@ func TestCLI(t *testing.T) {
 	})
 }
 
+func retryUntil(d time.Duration, f func() bool) bool {
+	deadline := time.Now().Add(d)
+	for time.Now().Before(deadline) {
+		if f() {
+			return true
+		}
+	}
+	return false
+}
+
 func assertFinishCalledWith(t *testing.T, game *GameSpy, winner string) {
 	t.Helper()
-	if game.FinishedWith != winner {
-		t.Errorf("wanted %v but got %d", winner, game.StartedWith)
+
+	passed := retryUntil(500*time.Millisecond, func() bool {
+		return game.FinishedWith == winner
+	})
+
+	if !passed {
+		t.Errorf("expected finish called with %q but got %q", winner, game.FinishedWith)
 	}
 }
 
 func assertGameStartedWith(t *testing.T, game *GameSpy, count int) {
 	t.Helper()
-	if game.StartedWith != count {
+
+	passed := retryUntil(500*time.Millisecond, func() bool {
+		return game.StartedWith == count
+	})
+	if !passed {
 		t.Errorf("wanted Start called with %v but got %d", count, game.StartedWith)
 	}
 }
